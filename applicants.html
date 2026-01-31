@@ -201,8 +201,8 @@
             display: flex;
         }
 
-        .cv-file-info span {
-            color: #22c55e;
+        .cv-file-info #cv-file-name {
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 500;
         }
 
@@ -381,7 +381,7 @@
         }
 
         .job-card.recommended::after {
-            content: '★ Best Match';
+            content: 'Best Match';
             position: absolute;
             top: 1rem;
             right: 1rem;
@@ -403,8 +403,15 @@
         }
 
         .job-icon {
-            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
             transition: transform 0.3s ease;
+        }
+
+        .job-icon svg {
+            width: 100%;
+            height: 100%;
+            color: #60a5fa;
         }
 
         .job-card:hover .job-icon {
@@ -495,6 +502,163 @@
             box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
         }
 
+        .user-badge {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .user-badge svg {
+            width: 20px;
+            height: 20px;
+            color: #3b82f6;
+        }
+
+        .user-badge strong {
+            color: #3b82f6;
+        }
+
+        .orion-chat-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orion-chat-toggle svg { width: 28px; height: 28px; fill: currentColor; }
+
+        .orion-chat-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 380px;
+            max-height: 480px;
+            background: rgba(17, 24, 39, 0.98);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .orion-chat-panel.open { display: flex; }
+
+        .orion-chat-header {
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .orion-chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orion-chat-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 1.25rem; }
+
+        .orion-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            max-height: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .orion-msg {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            max-width: 85%;
+        }
+
+        .orion-msg.bot { background: rgba(59, 130, 246, 0.15); border-left: 3px solid #3b82f6; align-self: flex-start; }
+        .orion-msg.user { background: rgba(255, 255, 255, 0.08); align-self: flex-end; }
+
+        .orion-chat-input-area { padding: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .orion-chat-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .recommended-section { display: none; margin-bottom: 2.5rem; }
+        .recommended-section.show { display: block; }
+        .carousel-wrapper { display: flex; justify-content: center; align-items: center; min-height: 320px; perspective: 800px; }
+        @keyframes autoRun3d { from { transform: perspective(800px) rotateY(-360deg); } to { transform: perspective(800px) rotateY(0deg); } }
+        @keyframes animateBrightness { 10% { filter: brightness(1); } 50% { filter: brightness(0.85); } 90% { filter: brightness(1); } }
+        .card-3d {
+            position: relative;
+            width: 400px;
+            height: 280px;
+            transform-style: preserve-3d;
+            transform: perspective(800px);
+            animation: autoRun3d 20s linear infinite;
+            will-change: transform;
+        }
+        .card-3d .carousel-job-card {
+            position: absolute;
+            width: 220px;
+            min-height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 1rem;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            animation: animateBrightness 20s linear infinite;
+            transition-duration: 200ms;
+            will-change: transform, filter;
+            padding: 1rem;
+            overflow: hidden;
+        }
+        .card-3d:hover { animation-play-state: paused !important; }
+        .card-3d:hover .carousel-job-card { animation-play-state: paused !important; }
+        .carousel-job-card .job-title { font-size: 1rem; margin-bottom: 0.25rem; }
+        .carousel-job-card .job-company { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+        .carousel-job-card .match-score { font-size: 0.75rem; color: #4ade80; margin-bottom: 0.5rem; }
+        .carousel-job-card .job-desc { font-size: 0.8rem; color: rgba(255,255,255,0.7); line-height: 1.4; }
+        .carousel-job-card .apply-btn { padding: 0.5rem; font-size: 0.85rem; margin-top: 0.5rem; }
+
         @media (max-width: 768px) {
             .page-title { font-size: 2rem; }
             .jobs-grid { grid-template-columns: 1fr; }
@@ -505,18 +669,20 @@
 <body>
     <div id="galaxy-background"></div>
 
+    <div class="user-badge" id="userBadge"></div>
+
     <div class="container">
-        <a href="index.html" class="back-btn">← Back to Orion</a>
+        <a href="index.html?home=1" class="back-btn">← Back to Orion</a>
 
         <div class="page-header">
             <h1 class="page-title">SPACE42</h1>
-            <p class="page-subtitle">UAE-based satellite technology — Create, launch, and operate the future of space</p>
+            <p class="page-subtitle">Join us on our journey</p>
         </div>
 
         <!-- Orion AI Panel -->
         <section class="orion-panel">
             <div class="orion-header">
-                <div class="orion-avatar">🤖</div>
+                <div class="orion-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" style="width:28px;height:28px"><rect x="5" y="2" width="14" height="10" rx="2"/><circle cx="8.5" cy="7" r="1"/><circle cx="15.5" cy="7" r="1"/><path d="M9 11h6M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></div>
                 <div class="orion-info">
                     <h3>Orion — Your Career Assistant</h3>
                     <p>Upload your CV and I'll match you with the best roles and suggest skills to strengthen your application</p>
@@ -525,12 +691,12 @@
 
             <div class="cv-upload-zone" id="cv-upload-zone">
                 <input type="file" id="cv-input" accept=".pdf,.doc,.docx" hidden>
-                <div class="cv-upload-icon">📄</div>
+                <div class="cv-upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;color:rgba(255,255,255,0.8)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
                 <div class="cv-upload-text">Upload your CV / Resume</div>
                 <div class="cv-upload-hint">PDF, DOC or DOCX — Max 5MB</div>
                 <button type="button" class="cv-upload-btn" id="cv-upload-trigger">Choose File</button>
                 <div class="cv-file-info" id="cv-file-info">
-                    <span>✓</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="width:18px;height:18px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>
                     <span id="cv-file-name"></span>
                     <button type="button" id="cv-remove-btn">Remove</button>
                 </div>
@@ -541,15 +707,24 @@
                     Based on your background, I've identified your top matches and skills that could strengthen your application.
                 </div>
                 <div class="suggestions-section">
-                    <div class="suggestions-title">✨ Skills to strengthen your application</div>
+                    <div class="suggestions-title">Skills to strengthen your application</div>
                     <div class="skill-tags" id="skill-suggestions"></div>
                 </div>
             </div>
         </section>
 
+        <!-- Recommended Jobs 3D Carousel (shown when CV uploaded) -->
+        <section class="recommended-section" id="recommended-section">
+            <h2 class="section-title">Recommended for You</h2>
+            <p class="section-subtitle">Your top matches based on your CV</p>
+            <div class="carousel-wrapper">
+                <div class="card-3d" id="card3d"></div>
+            </div>
+        </section>
+
         <!-- Job Listings -->
         <section>
-            <h2 class="section-title">🛰️ Open Positions</h2>
+            <h2 class="section-title">Open Positions</h2>
             <p class="section-subtitle" id="jobs-subtitle">Browse all opportunities at SPACE42</p>
 
             <div class="jobs-filter">
@@ -563,8 +738,56 @@
         </section>
     </div>
 
+    <button class="orion-chat-toggle" id="orionChatToggle" aria-label="Chat with Orion">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+    </button>
+
+    <div class="orion-chat-panel" id="orionChatPanel">
+        <div class="orion-chat-header">
+            <div class="orion-chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" style="width:22px;height:22px"><rect x="5" y="2" width="14" height="10" rx="2"/><circle cx="8.5" cy="7" r="1"/><circle cx="15.5" cy="7" r="1"/><path d="M9 11h6M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></div>
+            <div><h3>Orion</h3><p>Your AI assistant</p></div>
+            <button class="orion-chat-close" id="orionChatClose" aria-label="Close chat">&times;</button>
+        </div>
+        <div class="orion-chat-messages" id="orionChatMessages">
+            <div class="orion-msg bot">Hi! I'm Orion. Upload your CV and I'll help match you with the best roles. Ask me anything!</div>
+        </div>
+        <div class="orion-chat-input-area">
+            <input type="text" class="orion-chat-input" id="orionChatInput" placeholder="Ask Orion a question..." autocomplete="off">
+        </div>
+    </div>
+
     <script src="galaxy.js"></script>
     <script>
+        sessionStorage.setItem('returningUser', '1');
+
+        const role = localStorage.getItem('userRole') || 'Candidate';
+        const badge = document.getElementById('userBadge');
+        badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Role: <strong>' + role + '</strong>';
+
+        document.getElementById('userBadge').addEventListener('click', () => {
+            if (confirm('Change role or log out?')) {
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('orionChatToggle').addEventListener('click', () => document.getElementById('orionChatPanel').classList.toggle('open'));
+        document.getElementById('orionChatClose').addEventListener('click', () => document.getElementById('orionChatPanel').classList.remove('open'));
+        document.getElementById('orionChatInput').addEventListener('keypress', (e) => {
+            const t = document.getElementById('orionChatInput').value.trim();
+            if (e.key === 'Enter' && t) {
+                const msgs = document.getElementById('orionChatMessages');
+                const u = document.createElement('div'); u.className = 'orion-msg user'; u.textContent = t; msgs.appendChild(u);
+                document.getElementById('orionChatInput').value = '';
+                setTimeout(() => {
+                    const r = document.createElement('div'); r.className = 'orion-msg bot'; r.textContent = "I'll help you find the right role. Upload your CV for personalized job matching!"; msgs.appendChild(r);
+                    msgs.scrollTop = msgs.scrollHeight;
+                }, 600);
+                msgs.scrollTop = msgs.scrollHeight;
+            }
+        });
+
         // Initialize Galaxy Background
         window.addEventListener('DOMContentLoaded', () => {
             window.initGalaxy('galaxy-background', {
@@ -584,13 +807,21 @@
             });
         });
 
-        // Job listings data — SPACE42 UAE satellite company
+        const iconSatellite = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="6" rx="4" ry="2"/><path d="M4 6v4c0 4 3.5 6 8 6s8-2 8-6V6"/><path d="M4 10c0 4 3.5 6 8 6"/></svg>';
+        const iconRocket = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>';
+        const iconScience = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+        const iconGlobe = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+        const iconGear = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+        const iconCode = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>';
+        const iconAntenna = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12 4 4h16l2 8-10 7-2-7z"/></svg>';
+        const iconPayload = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/></svg>';
+
         const jobs = [
             {
                 id: 1,
                 title: 'Satellite Systems Engineer',
                 company: 'SPACE42',
-                icon: '🛰️',
+                icon: iconSatellite,
                 location: 'Abu Dhabi, UAE',
                 type: 'Full-time',
                 level: 'Senior',
@@ -604,7 +835,7 @@
                 id: 2,
                 title: 'Mission Control Specialist',
                 company: 'SPACE42',
-                icon: '🚀',
+                icon: iconRocket,
                 location: 'Dubai, UAE',
                 type: 'Full-time',
                 level: 'Mid-level',
@@ -618,7 +849,7 @@
                 id: 3,
                 title: 'Aerospace Data Scientist',
                 company: 'SPACE42',
-                icon: '🔬',
+                icon: iconScience,
                 location: 'Abu Dhabi, UAE',
                 type: 'Full-time',
                 level: 'Senior',
@@ -632,7 +863,7 @@
                 id: 4,
                 title: 'Earth Observation Analyst',
                 company: 'SPACE42',
-                icon: '🌍',
+                icon: iconGlobe,
                 location: 'Remote',
                 type: 'Full-time',
                 level: 'Junior',
@@ -646,7 +877,7 @@
                 id: 5,
                 title: 'Propulsion Systems Engineer',
                 company: 'SPACE42',
-                icon: '⚙️',
+                icon: iconGear,
                 location: 'Abu Dhabi, UAE',
                 type: 'Full-time',
                 level: 'Senior',
@@ -660,7 +891,7 @@
                 id: 6,
                 title: 'Space Software Developer',
                 company: 'SPACE42',
-                icon: '💻',
+                icon: iconCode,
                 location: 'Dubai, UAE / Remote',
                 type: 'Full-time',
                 level: 'Mid-level',
@@ -674,7 +905,7 @@
                 id: 7,
                 title: 'Ground Station Engineer',
                 company: 'SPACE42',
-                icon: '📡',
+                icon: iconAntenna,
                 location: 'Abu Dhabi, UAE',
                 type: 'Full-time',
                 level: 'Mid-level',
@@ -688,7 +919,7 @@
                 id: 8,
                 title: 'Payload Integration Engineer',
                 company: 'SPACE42',
-                icon: '📦',
+                icon: iconPayload,
                 location: 'Abu Dhabi, UAE',
                 type: 'Full-time',
                 level: 'Senior',
@@ -736,9 +967,11 @@
                 cvFileInfo.classList.add('show');
                 cvZone.classList.add('has-file');
                 aiSuggestions.classList.add('show');
+                document.getElementById('recommended-section').classList.add('show');
                 renderSkillSuggestions();
+                renderRecommendedCarousel();
                 renderJobs();
-                document.getElementById('jobs-subtitle').textContent = 'Orion has identified your best matches below ★';
+                document.getElementById('jobs-subtitle').textContent = 'Orion has identified your best matches below';
             }
         });
 
@@ -749,9 +982,32 @@
             cvFileInfo.classList.remove('show');
             cvZone.classList.remove('has-file');
             aiSuggestions.classList.remove('show');
+            document.getElementById('recommended-section').classList.remove('show');
             renderJobs();
             document.getElementById('jobs-subtitle').textContent = 'Browse all opportunities at SPACE42';
         });
+
+        function renderRecommendedCarousel() {
+            const recommended = jobs.filter(j => j.recommended);
+            const container = document.getElementById('card3d');
+            const n = Math.max(recommended.length, 1);
+            const angle = 360 / n;
+            const radius = 150;
+
+            container.innerHTML = recommended.map((job, i) => {
+                const rotY = i * angle;
+                const style = `transform: translate(-50%, -50%) rotateY(${rotY}deg) translateZ(${radius}px); animation-delay: -${i * 2}s;`;
+                return `
+                    <div class="carousel-job-card" style="${style}">
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-company">${job.company}</div>
+                        <div class="match-score">${job.matchScore}% match</div>
+                        <div class="job-desc">${job.description.substring(0, 80)}...</div>
+                        <button type="button" class="apply-btn" data-job-id="${job.id}" data-job-title="${job.title}">Apply Now</button>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function renderSkillSuggestions() {
             const allSkills = [...skillSuggestions.recommended, ...skillSuggestions.additional];
@@ -786,15 +1042,24 @@
                     <p class="job-company">${job.company}</p>
                     ${uploadedFile && job.matchScore ? `<div class="match-score">${job.matchScore}% match</div>` : ''}
                     <div class="job-details">
-                        <span class="job-detail">📍 ${job.location}</span>
-                        <span class="job-detail">💼 ${job.type}</span>
-                        <span class="job-detail">⭐ ${job.level}</span>
+                        <span class="job-detail">${job.location}</span>
+                        <span class="job-detail">${job.type}</span>
+                        <span class="job-detail">${job.level}</span>
                     </div>
                     <p class="job-description">${job.description}</p>
                     <button type="button" class="apply-btn" data-job-id="${job.id}" data-job-title="${job.title}">Apply Now</button>
                 </div>
             `).join('');
         }
+
+        document.getElementById('card3d')?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.apply-btn');
+            if (btn) {
+                e.preventDefault();
+                const id = btn.dataset.jobId, title = btn.dataset.jobTitle;
+                if (uploadedFile) alert(`Application submitted for ${title}! Our team will review your profile shortly.`);
+            }
+        });
 
         document.getElementById('jobs-grid').addEventListener('click', (e) => {
             const btn = e.target.closest('.apply-btn');

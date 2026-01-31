@@ -1,6 +1,6 @@
 # SPACE42 - Career Portal with Orion AI Assistant
 
-## 🌌 Welcome to SPACE42
+## Welcome to SPACE42
 
 An immersive career portal featuring:
 - **WebGL Galaxy Background** - Stays throughout your entire journey
@@ -10,7 +10,7 @@ An immersive career portal featuring:
 
 ---
 
-## ✨ What's New
+## What's New
 
 ### 1. **SPACE42 Branding**
 - Large, bold ombré logo (8rem font size)
@@ -37,7 +37,7 @@ An immersive career portal featuring:
 
 ---
 
-## 🎬 Complete User Journey
+## Complete User Journey
 
 ### First-Time Visitor:
 
@@ -91,7 +91,7 @@ Double-click **`index.html`**
 
 ---
 
-## 📁 Files Included
+## Files Included
 
 ```
 space42/
@@ -105,16 +105,16 @@ space42/
 
 ---
 
-## 🎨 Galaxy Background Features
+## Galaxy Background Features
 
 Based on the OGL (Ogle) WebGL library:
 
-- ✨ **Advanced shaders** - GLSL fragment/vertex shaders
-- 🌟 **Layered stars** - Multiple depth layers
-- 💫 **Twinkling effect** - Realistic star shimmer
-- 🖱️ **Mouse repulsion** - Stars avoid cursor
-- 🌀 **Rotation** - Gentle galaxy spin
-- 🎨 **Color control** - Hue shift, saturation, glow
+- **Advanced shaders** - GLSL fragment/vertex shaders
+- **Layered stars** - Multiple depth layers
+- **Twinkling effect** - Realistic star shimmer
+- **Mouse repulsion** - Stars avoid cursor
+- **Rotation** - Gentle galaxy spin
+- **Color control** - Hue shift, saturation, glow
 
 ### Settings:
 ```javascript
@@ -136,12 +136,7 @@ Based on the OGL (Ogle) WebGL library:
 
 ---
 
-## 👤 Role-Based Experience
-
-### HR / Recruiter:
-- Manage Job Postings
-- Review Applications
-- Employee Onboarding Management
+## Role-Based Experience
 
 ### Candidate:
 - Explore & Apply for Roles
@@ -150,11 +145,11 @@ Based on the OGL (Ogle) WebGL library:
 ### Employee:
 - Start Onboarding
 - Internal Opportunities
-- Team Resources
+- Track Your Application
 
 ---
 
-## 🎭 Animation Timeline
+## Animation Timeline
 
 | Time | Event |
 |------|-------|
@@ -168,7 +163,7 @@ Based on the OGL (Ogle) WebGL library:
 
 ---
 
-## 🔧 Customization
+## Customization
 
 ### Change SPACE42 Font Size:
 ```css
@@ -179,7 +174,7 @@ Based on the OGL (Ogle) WebGL library:
 
 ### Change Orion Avatar:
 ```html
-<div class="orion-avatar">🤖</div>  <!-- ← Change emoji -->
+<div class="orion-avatar"><span>O</span></div>  <!-- Orion initial -->
 ```
 
 ### Adjust Intro Duration:
@@ -198,11 +193,11 @@ saturation: 0,    // 0-100 vividness
 
 ---
 
-## 💾 Data Persistence
+## Data Persistence
 
 Uses `localStorage` to remember:
-- ✅ `isLoggedIn` - Login state
-- ✅ `userRole` - Selected role (HR/Candidate/Employee)
+- `isLoggedIn` - Login state
+- `userRole` - Selected role (Candidate/Employee)
 
 ### To Reset:
 Click the blue role badge in top-right corner, or:
@@ -228,7 +223,7 @@ location.reload();
 
 ---
 
-## 🎯 Technical Details
+## Technical Details
 
 ### Galaxy Component:
 - **WebGL** via OGL (lightweight 3D library)
@@ -243,14 +238,14 @@ location.reload();
 - **CSS animations** for transitions
 
 ### Browser Support:
-- ✅ Chrome/Edge (Recommended)
-- ✅ Firefox
-- ✅ Safari
-- ⚠️ Requires WebGL support
+- Chrome/Edge (Recommended)
+- Firefox
+- Safari
+- Requires WebGL support
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Galaxy not showing?**
 - Check browser console (F12)
@@ -267,16 +262,16 @@ location.reload();
 
 ---
 
-## ✨ Key Features Implemented
+## Key Features Implemented
 
-✅ **SPACE42** large ombré logo  
-✅ **Persistent Galaxy** background (stays throughout)  
-✅ **Orion AI** introduction dialogue  
-✅ **Login/Signup** authentication system  
-✅ **Role selection** (HR/Candidate/Employee)  
-✅ **Role-based** content  
-✅ **Smooth transitions** between all screens  
-✅ **State persistence** with localStorage  
+- **SPACE42** large ombré logo  
+- **Persistent Galaxy** background (stays throughout)  
+- **Orion AI** introduction dialogue  
+- **Login/Signup** authentication system  
+- **Role selection** (Candidate/Employee)  
+- **Role-based** content  
+- **Smooth transitions** between all screens  
+- **State persistence** with localStorage  
 
 ---
 
@@ -290,7 +285,7 @@ location.reload();
 
 ---
 
-## 💡 Pro Tips
+## Pro Tips
 
 1. **Galaxy is interactive** - Move your mouse to see stars repel
 2. **Badge is clickable** - Change role or logout anytime
@@ -309,8 +304,8 @@ location.reload();
 
 ---
 
-**Welcome to SPACE42! Your career journey with Orion starts now.** 🚀✨
+**Welcome to SPACE42! Your career journey with Orion starts now.**
 
 ---
 
-Made with ❤️ and stardust
+Made with care

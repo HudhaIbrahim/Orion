@@ -558,11 +558,32 @@
         .orion-chat-input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
+
+        .user-badge {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .user-badge svg { width: 20px; height: 20px; color: #3b82f6; }
+        .user-badge strong { color: #3b82f6; }
     </style>
 </head>
 <body>
+    <div class="user-badge" id="userBadge"></div>
+
     <div class="container">
-        <a href="index.html" class="back-btn">← Back to Orion</a>
+        <a href="index.html?home=1" class="back-btn">← Back to Orion</a>
 
         <div class="welcome-banner">
             <h1 class="welcome-title">Welcome to SPACE42</h1>
@@ -828,7 +849,7 @@
 
     <div class="orion-chat-panel" id="orionChatPanel">
         <div class="orion-chat-header">
-            <div class="orion-chat-avatar">O</div>
+            <div class="orion-chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" style="width:22px;height:22px"><rect x="5" y="2" width="14" height="10" rx="2"/><circle cx="8.5" cy="7" r="1"/><circle cx="15.5" cy="7" r="1"/><path d="M9 11h6M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></div>
             <div>
                 <h3>Orion</h3>
                 <p>Your AI assistant</p>
@@ -844,6 +865,12 @@
     </div>
 
     <script>
+        sessionStorage.setItem('returningUser', '1');
+
+        const role = localStorage.getItem('userRole') || 'Employee';
+        document.getElementById('userBadge').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Role: <strong>' + role + '</strong>';
+        document.getElementById('userBadge').onclick = () => { if (confirm('Change role or log out?')) { localStorage.removeItem('userRole'); localStorage.removeItem('isLoggedIn'); location.href = 'index.html'; } };
+
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');

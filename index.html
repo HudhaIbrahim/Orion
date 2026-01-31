@@ -586,6 +586,12 @@
             transition: transform 0.4s ease;
         }
 
+        .role-icon svg {
+            width: 4rem;
+            height: 4rem;
+            color: #60a5fa;
+        }
+
         .role-card:hover .role-icon {
             transform: scale(1.1);
         }
@@ -664,16 +670,18 @@
 
         .card-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             margin-bottom: 30px;
         }
 
-        .icon {
+        .card .icon {
             font-size: 3rem;
         }
 
-        .emoji {
-            font-size: 3rem;
+        .card .icon svg {
+            width: 3rem;
+            height: 3rem;
+            color: #60a5fa;
         }
 
         .card h3 {
@@ -718,6 +726,81 @@
         .user-badge strong {
             color: #3b82f6;
             margin-left: 8px;
+        }
+
+        .user-badge svg {
+            width: 20px;
+            height: 20px;
+            color: #3b82f6;
+        }
+
+        .orion-chat-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .orion-chat-toggle svg { width: 28px; height: 28px; fill: currentColor; }
+        .orion-chat-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 380px;
+            max-height: 480px;
+            background: rgba(17, 24, 39, 0.98);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+        .orion-chat-panel.open { display: flex; }
+        .orion-chat-header {
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .orion-chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .orion-chat-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 1.25rem; }
+        .orion-chat-messages { flex: 1; overflow-y: auto; padding: 1rem; max-height: 320px; display: flex; flex-direction: column; gap: 1rem; }
+        .orion-msg { padding: 0.75rem 1rem; border-radius: 12px; font-size: 0.9rem; max-width: 85%; }
+        .orion-msg.bot { background: rgba(59, 130, 246, 0.15); border-left: 3px solid #3b82f6; align-self: flex-start; }
+        .orion-msg.user { background: rgba(255, 255, 255, 0.08); align-self: flex-end; }
+        .orion-chat-input-area { padding: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .orion-chat-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
         }
 
         /* Responsive */
@@ -840,12 +923,12 @@
             </div>
             <div class="role-grid">
                 <div class="role-card" onclick="selectRole('Candidate')">
-                    <div class="role-icon">🎯</div>
+                    <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
                     <h3>Candidate</h3>
                     <p>Potential candidates — explore opportunities and apply for positions</p>
                 </div>
                 <div class="role-card" onclick="selectRole('Employee')">
-                    <div class="role-icon">⭐</div>
+                    <div class="role-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
                     <h3>Employee</h3>
                     <p>Newly hired, transferred, or promoted employees</p>
                 </div>
@@ -855,6 +938,23 @@
 
     <!-- User Badge -->
     <div class="user-badge" id="userBadge"></div>
+
+    <button class="orion-chat-toggle" id="orionChatToggle" aria-label="Chat with Orion">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+    </button>
+    <div class="orion-chat-panel" id="orionChatPanel">
+        <div class="orion-chat-header">
+            <div class="orion-chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" style="width:22px;height:22px"><rect x="5" y="2" width="14" height="10" rx="2"/><circle cx="8.5" cy="7" r="1"/><circle cx="15.5" cy="7" r="1"/><path d="M9 11h6M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></div>
+            <div><h3>Orion</h3><p>Your AI assistant</p></div>
+            <button class="orion-chat-close" id="orionChatClose">&times;</button>
+        </div>
+        <div class="orion-chat-messages" id="orionChatMessages">
+            <div class="orion-msg bot">Hi! I'm Orion, your AI guide. Ask me anything about SPACE42 or your career journey.</div>
+        </div>
+        <div class="orion-chat-input-area">
+            <input type="text" class="orion-chat-input" id="orionChatInput" placeholder="Ask Orion..." autocomplete="off">
+        </div>
+    </div>
 
     <!-- Main Content -->
     <div class="container" id="mainContent">
@@ -918,27 +1018,42 @@
         let userRole = localStorage.getItem('userRole');
         let isLoggedIn = localStorage.getItem('isLoggedIn');
 
-        // Step 1: SPACE42 Intro (3.5s)
-        setTimeout(() => {
-            document.getElementById('welcome-screen').classList.add('fade-out');
-            // Show galaxy background as intro fades
+        const urlParams = new URLSearchParams(window.location.search);
+        const skipIntro = urlParams.get('home') === '1' || sessionStorage.getItem('returningUser') === '1';
+        if (skipIntro) sessionStorage.removeItem('returningUser');
+
+        if (skipIntro) {
+            document.getElementById('welcome-screen').style.display = 'none';
             document.getElementById('galaxy-background').classList.add('show');
-            
+            document.getElementById('orion-intro').style.display = 'none';
+            if (isLoggedIn && userRole) {
+                const badge = document.getElementById('userBadge');
+                badge.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Role: <strong>${userRole}</strong>`;
+                badge.classList.add('show');
+                document.getElementById('cardsContainer').innerHTML = getCardsForRole(userRole);
+                document.getElementById('mainContent').classList.add('show');
+            } else if (isLoggedIn) {
+                document.getElementById('role-selection').classList.add('show');
+            } else {
+                document.getElementById('auth-screen').classList.add('show');
+            }
+        } else {
+            // Step 1: SPACE42 Intro (3.5s)
             setTimeout(() => {
-                // Step 2: Show Orion Introduction
-                document.getElementById('orion-intro').classList.add('show');
+                document.getElementById('welcome-screen').classList.add('fade-out');
+                document.getElementById('galaxy-background').classList.add('show');
                 
-                // Start cycling through hello messages
-                cycleHelloMessages();
-                
-                // Start typewriter effect after a brief delay
                 setTimeout(() => {
-                    const typewriterElement = document.getElementById('typewriterText');
-                    const greeting = "Hello! I'm Orion, your AI guide at SPACE42.";
-                    typeWriter(typewriterElement, greeting, 50);
-                }, 500);
-            }, 1500);
-        }, 3500);
+                    document.getElementById('orion-intro').classList.add('show');
+                    cycleHelloMessages();
+                    setTimeout(() => {
+                        const typewriterElement = document.getElementById('typewriterText');
+                        const greeting = "Hello! I'm Orion, your AI guide at SPACE42.";
+                        typeWriter(typewriterElement, greeting, 50);
+                    }, 500);
+                }, 1500);
+            }, 3500);
+        }
 
         // Cycle through "Hello" in different languages
         function cycleHelloMessages() {
@@ -1051,9 +1166,8 @@
                 window.location.href = 'applicants.html';
                 return;
             }
-            // Show user badge
             const badge = document.getElementById('userBadge');
-            badge.innerHTML = `Role: <strong>${role}</strong>`;
+            badge.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Role: <strong>${role}</strong>`;
             badge.classList.add('show');
 
             // Populate cards based on role
@@ -1067,10 +1181,9 @@
         function getCardsForRole(role) {
             const cardSets = {
                 'Candidate': `
-                    <a href="jobs.html" class="card">
+                    <a href="applicants.html" class="card">
                         <div class="card-header">
-                            <div class="icon">💼</div>
-                            <div class="emoji">🎯</div>
+                            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
                         </div>
                         <h3>Explore Roles / Apply</h3>
                         <p>Browse open positions and start your application</p>
@@ -1080,8 +1193,7 @@
                     </a>
                     <a href="status.html" class="card">
                         <div class="card-header">
-                            <div class="icon">📋</div>
-                            <div class="emoji">📄</div>
+                            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
                         </div>
                         <h3>Check Application Status</h3>
                         <p>Track your application and view next steps</p>
@@ -1093,8 +1205,7 @@
                 'Employee': `
                     <a href="onboarding.html" class="card">
                         <div class="card-header">
-                            <div class="icon">✨</div>
-                            <div class="emoji">🎉</div>
+                            <div class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
                         </div>
                         <h3>Start Onboarding</h3>
                         <p>Access your personalized onboarding journey</p>
@@ -1104,8 +1215,7 @@
                     </a>
                     <a href="jobs.html" class="card">
                         <div class="card-header">
-                            <div class="icon">📚</div>
-                            <div class="emoji">🔍</div>
+                            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
                         </div>
                         <h3>Internal Opportunities</h3>
                         <p>Explore internal transfers and promotions</p>
@@ -1115,8 +1225,7 @@
                     </a>
                     <a href="status.html" class="card">
                         <div class="card-header">
-                            <div class="icon">📋</div>
-                            <div class="emoji">📄</div>
+                            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
                         </div>
                         <h3>Track Your Application</h3>
                         <p>Track your application status and next steps</p>
@@ -1130,13 +1239,31 @@
             return cardSets[role] || cardSets['Candidate'];
         }
 
-        // Change role on badge click
         document.addEventListener('click', (e) => {
-            if (e.target.id === 'userBadge' || e.target.parentElement.id === 'userBadge') {
+            if (e.target.id === 'userBadge' || e.target.closest('#userBadge')) {
                 if (confirm('Would you like to change your role or log out?')) {
                     localStorage.removeItem('userRole');
                     localStorage.removeItem('isLoggedIn');
                     location.reload();
+                }
+            }
+        });
+
+        document.getElementById('orionChatToggle').addEventListener('click', () => document.getElementById('orionChatPanel').classList.toggle('open'));
+        document.getElementById('orionChatClose').addEventListener('click', () => document.getElementById('orionChatPanel').classList.remove('open'));
+        document.getElementById('orionChatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const t = document.getElementById('orionChatInput').value.trim();
+                if (t) {
+                    const msgs = document.getElementById('orionChatMessages');
+                    const u = document.createElement('div'); u.className = 'orion-msg user'; u.textContent = t; msgs.appendChild(u);
+                    document.getElementById('orionChatInput').value = '';
+                    setTimeout(() => {
+                        const r = document.createElement('div'); r.className = 'orion-msg bot'; r.textContent = "I'm here to help! Select your role to explore opportunities.";
+                        msgs.appendChild(r);
+                        msgs.scrollTop = msgs.scrollHeight;
+                    }, 600);
+                    msgs.scrollTop = msgs.scrollHeight;
                 }
             }
         });
