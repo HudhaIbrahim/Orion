@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Portal - SPACE42</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        #galaxy-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+
+        /* Login */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        #login-screen.hidden { display: none; }
+        .login-box {
+            width: 380px;
+            background: rgba(17, 24, 39, 1);
+            border: 1px solid rgba(55, 65, 81, 1);
+            border-radius: 1rem;
+            padding: 2.5rem;
+        }
+        .login-box h2 { text-align: center; margin-bottom: 0.5rem; }
+        .login-box .sub { color: rgba(255,255,255,0.6); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem; }
+        .login-box label { display: block; color: rgba(156, 163, 175, 1); font-size: 0.875rem; margin-bottom: 4px; }
+        .login-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(17, 24, 39, 1);
+            border: 1px solid rgba(55, 65, 81, 1);
+            border-radius: 0.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .login-box input:focus { outline: none; border-color: rgba(167, 139, 250, 1); }
+        .login-box .sign {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .login-box .sign:hover { opacity: 0.95; }
+        .login-error { color: #ef4444; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+        /* Dashboard */
+        #dashboard { display: none; }
+        #dashboard.show { display: block; }
+        .user-badge {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        .user-badge:hover { background: rgba(255, 255, 255, 0.08); }
+        .user-badge svg { width: 18px; height: 18px; color: #3b82f6; vertical-align: middle; margin-right: 6px; }
+
+        /* Orion Greeting */
+        .orion-greeting {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .orion-avatar {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .orion-avatar svg { width: 32px; height: 32px; color: white; }
+        .orion-greeting h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .orion-greeting p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
+
+        /* Jobs Section */
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .jobs-header h2 { font-size: 1.5rem; }
+        .jobs-panels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .job-panel {
+            width: calc(33.333% - 0.67rem);
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .job-panel:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+        }
+        .job-panel h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .job-panel .job-meta { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+        .add-job-btn {
+            width: calc(33.333% - 0.67rem);
+            min-width: 280px;
+            min-height: 100px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 2px dashed rgba(59, 130, 246, 0.4);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 2rem;
+            color: #60a5fa;
+        }
+        .add-job-btn:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        /* Job Detail (expanded) */
+        .job-detail-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        .job-detail-section.show { display: block; }
+        .job-detail-section h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .job-detail-section .job-desc { color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 1.5rem; }
+        .applicants-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .applicants-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Applicants Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-content {
+            background: rgba(17, 24, 39, 0.98);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { font-size: 1.25rem; }
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+        }
+        .applicant-rank {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-right: 0.5rem;
+        }
+        .applicant-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .applicant-card h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .applicant-card .applicant-email { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 0.75rem; }
+        .applicant-score {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+        .applicant-flags {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+        .applicant-flags strong { color: #60a5fa; }
+
+        /* Add Job Modal */
+        .add-job-form label { display: block; color: rgba(255,255,255,0.8); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .add-job-form input, .add-job-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .add-job-form textarea { min-height: 100px; resize: vertical; }
+        .modal-actions { display: flex; gap: 1rem; margin-top: 1rem; }
+        .modal-actions button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+
+        /* Tabs Navigation */
+        .hr-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hr-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .hr-tab:hover { color: white; }
+        .hr-tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+        .hr-tab-content { display: none; }
+        .hr-tab-content.active { display: block; }
+
+        /* Rejected CV Section */
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+        .filters-row select {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .view-toggle {
+            display: flex;
+            gap: 0.25rem;
+            margin-left: auto;
+        }
+        .view-toggle button {
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .view-toggle button.active { background: rgba(59, 130, 246, 0.3); border-color: #60a5fa; color: #60a5fa; }
+        .talent-orbit-cards { display: grid; gap: 1rem; }
+        .talent-orbit-cards.table-view { display: block; }
+        .talent-orbit-cards.table-view .orbit-card { display: grid; grid-template-columns: 45px 70px 55px 1fr 140px 55px 1fr; align-items: center; gap: 1rem; }
+        .orbit-card,
+        .rejected-cv-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem;
+            transition: all 0.3s;
+        }
+        .orbit-card:hover,
+        .rejected-cv-card:hover { border-color: rgba(59, 130, 246, 0.3); }
+        .orbit-card .score-badge,
+        .rejected-cv-card .score-badge {
+            display: inline-block;
+            padding: 0.35rem 0.7rem;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.2));
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #f87171;
+            margin-bottom: 0.5rem;
+        }
+        .rejected-cv-card .score-badge.good { background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2)); color: #4ade80; }
+        .rejection-reason {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            background: rgba(239, 68, 68, 0.08);
+            border-radius: 8px;
+            border-left: 3px solid #ef4444;
+        }
+        .rejection-reason.collapsed { display: none; }
+        .rejection-toggle {
+            font-size: 0.8rem;
+            color: #60a5fa;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .skill-gap-panel {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            font-size: 0.85rem;
+        }
+        .skill-gap-panel.collapsed { display: none; }
+        .skill-match-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0.5rem 0; overflow: hidden; }
+        .skill-match-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 3px; }
+        .skill-gaps { color: #f87171; margin-top: 0.5rem; }
+        .training-potential { color: #4ade80; margin-top: 0.5rem; font-style: italic; }
+        .reconsider-btn {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 0.75rem;
+        }
+        .reconsider-btn:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        /* Talent Orbit */
+        .talent-orbit-intro { margin-bottom: 1.5rem; }
+        .talent-orbit-section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        .talent-orbit-section-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        .orbit-legend {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.06);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            line-height: 1.8;
+        }
+        .orbit-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            margin-left: 0.25rem;
+        }
+        .orbit-badge.orbit-3 { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; }
+        .orbit-badge.orbit-2 { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; }
+        .orbit-badge.orbit-1 { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; }
+        .orbit-card .orbit-badge { margin-left: 0; }
+        .rank-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        .orbit-card-highlight {
+            font-size: 0.8rem;
+            color: #4ade80;
+            margin-top: 0.5rem;
+        }
+        .talent-orbit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .talent-group h4 {
+            font-size: 0.95rem;
+            color: #60a5fa;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .talent-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .talent-card:hover { border-color: rgba(59, 130, 246, 0.3); }
+        .recontact-btn {
+            padding: 0.4rem 0.9rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 8px;
+            color: #60a5fa;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .recontact-btn:hover { background: rgba(59, 130, 246, 0.3); }
+
+        /* Reconsider Modal */
+        .reconsider-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+        .reconsider-actions button {
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reconsider-actions button:hover { background: rgba(59, 130, 246, 0.2); border-color: #60a5fa; }
+        .reconsider-actions button.primary { background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; }
+
+        /* HR Chat Assistant */
+        .hr-chat-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            color: white;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s;
+        }
+        .hr-chat-toggle:hover { transform: scale(1.05); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6); }
+        .hr-chat-toggle svg { width: 28px; height: 28px; }
+        .hr-chat-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 380px;
+            max-height: 480px;
+            background: rgba(17, 24, 39, 0.98);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            z-index: 99;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+        .hr-chat-panel.open { display: flex; }
+        .hr-chat-header {
+            padding: 1rem 1.25rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hr-chat-header h3 { font-size: 1rem; }
+        .hr-chat-close { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 1.25rem; }
+        .hr-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            max-height: 320px;
+        }
+        .hr-chat-msg { margin-bottom: 1rem; font-size: 0.9rem; }
+        .hr-chat-msg.user { text-align: right; }
+        .hr-chat-msg .bubble {
+            display: inline-block;
+            padding: 0.6rem 1rem;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            max-width: 90%;
+        }
+        .hr-chat-msg.user .bubble { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+        .hr-chat-input-wrap {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hr-chat-input-wrap input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .job-panel, .add-job-btn { width: 100%; }
+            .hr-chat-panel { width: calc(100% - 48px); right: 24px; left: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="galaxy-background"></div>
+
+    <!-- Login -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>HR Portal</h2>
+            <p class="sub">Sign in with your SPACE42 company email</p>
+            <form id="loginForm">
+                <label>Company Email</label>
+                <input type="email" id="loginEmail" placeholder="name@space42.com" required>
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter password" required>
+                <p class="login-error" id="loginError">Please use your @space42.com company email.</p>
+                <button type="submit" class="sign">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+        <div class="user-badge" id="userBadge"></div>
+
+        <div class="container">
+            <a href="index.html" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; margin-bottom: 1rem; display: inline-block;">← Back to Career Portal</a>
+
+            <!-- Tab Navigation -->
+            <div class="hr-tabs">
+                <button class="hr-tab active" data-tab="jobs">Open Positions</button>
+                <button class="hr-tab" data-tab="talent">Talent Orbit</button>
+            </div>
+
+            <!-- Jobs Tab -->
+            <div class="hr-tab-content active" id="tab-jobs">
+            <!-- Orion Greeting -->
+            <div class="orion-greeting">
+                <div class="orion-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="10" rx="2"/><circle cx="8.5" cy="7" r="1"/><circle cx="15.5" cy="7" r="1"/><path d="M9 11h6M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+                </div>
+                <div>
+                    <h1 id="orionGreeting">Hello!</h1>
+                    <p id="orionSub">Your hiring dashboard is ready. Click a job to view applicants.</p>
+                </div>
+            </div>
+
+            <!-- Job Panels -->
+            <div class="jobs-header">
+                <h2>Open Positions</h2>
+            </div>
+            <div class="jobs-panels" id="jobsPanels"></div>
+
+            <!-- Job Detail (shown when job clicked) -->
+            <div class="job-detail-section" id="jobDetailSection">
+                <h3 id="jobDetailTitle"></h3>
+                <p class="job-desc" id="jobDetailDesc"></p>
+                <button class="applicants-btn" id="applicantsBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    View Applicants
+                </button>
+            </div>
+            </div><!-- /tab-jobs -->
+
+            <!-- Talent Orbit Tab -->
+            <div class="hr-tab-content" id="tab-talent">
+                <div class="talent-orbit-intro">
+                    <h3 class="talent-orbit-section-title">Talent Orbit</h3>
+                    <p class="talent-orbit-section-desc">All candidates who did not proceed to hire, ranked by potential. Orbit 3 (highest value) first — fast-track re-entry candidates.</p>
+                </div>
+                <div class="orbit-legend">
+                    <div><span class="orbit-badge orbit-3">Orbit 3</span> Passed 3 interviews · Final round / role closed · Fast-track re-entry · HR alert on skill update</div>
+                    <div><span class="orbit-badge orbit-2">Orbit 2</span> Passed HR + 1–2 interviews · Rejected: missing tool, limited project experience, domain gap</div>
+                    <div><span class="orbit-badge orbit-1">Orbit 1</span> Early potential · CV passed · Failed early round (skill gaps, not fit)</div>
+                </div>
+                <div class="filters-row">
+                    <select id="filterOrbit">
+                        <option value="">All Orbits</option>
+                        <option value="3">Orbit 3 only</option>
+                        <option value="2">Orbit 2 only</option>
+                        <option value="1">Orbit 1 only</option>
+                    </select>
+                    <select id="filterRole">
+                        <option value="">All Roles</option>
+                        <option value="Satellite Systems Engineer">Satellite Systems Engineer</option>
+                        <option value="Mission Control Specialist">Mission Control Specialist</option>
+                        <option value="Space Software Developer">Space Software Developer</option>
+                    </select>
+                    <select id="filterSkills">
+                        <option value="">Skills Match</option>
+                        <option value="high">70%+</option>
+                        <option value="mid">50-70%</option>
+                        <option value="low">&lt;50%</option>
+                    </select>
+                    <select id="filterYoe">
+                        <option value="">Years of Experience</option>
+                        <option value="5+">5+ years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="0-3">0-3 years</option>
+                    </select>
+                    <div class="view-toggle">
+                        <button type="button" class="view-btn active" data-view="card">Cards</button>
+                        <button type="button" class="view-btn" data-view="table">Table</button>
+                    </div>
+                </div>
+                <div class="talent-orbit-cards" id="talentOrbitCards"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applicants Modal -->
+    <div class="modal-overlay" id="applicantsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="applicantsModalTitle">Applicants</h2>
+                <button class="modal-close" id="applicantsModalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="applicantsList"></div>
+        </div>
+    </div>
+
+    <!-- Reconsider Modal -->
+    <div class="modal-overlay" id="reconsiderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="reconsiderModalTitle">Reconsider Candidate</h2>
+                <button class="modal-close" id="reconsiderModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="reconsiderCandidateName" style="margin-bottom: 1rem;"></p>
+                <div class="reconsider-actions">
+                    <button type="button" class="primary" id="reconsiderMoveInterview">Move to Interview Stage</button>
+                    <button type="button" class="orbit3-only" id="reconsiderRecontact" style="display:none">Re-contact (Fast-track)</button>
+                    <button type="button" id="reconsiderReconsider">Reconsider for this role</button>
+                    <button type="button" id="reconsiderTagFuture">Tag for future roles</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HR Chat Assistant -->
+    <button class="hr-chat-toggle" id="hrChatToggle" title="HR Assistant" style="display:none" data-dashboard-only="1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+    <div class="hr-chat-panel" id="hrChatPanel">
+        <div class="hr-chat-header">
+            <h3>Orion HR Assistant</h3>
+            <button class="hr-chat-close" id="hrChatClose">&times;</button>
+        </div>
+        <div class="hr-chat-messages" id="hrChatMessages"></div>
+        <div class="hr-chat-input-wrap">
+            <input type="text" id="hrChatInput" placeholder="e.g. Summarize rejected candidates for Satellite Engineer...">
+        </div>
+    </div>
+
+    <!-- Add Job Modal -->
+    <div class="modal-overlay" id="addJobModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Position</h2>
+                <button class="modal-close" id="addJobModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="add-job-form" id="addJobForm">
+                    <label>Job Title</label>
+                    <input type="text" id="newJobTitle" placeholder="e.g. Satellite Systems Engineer" required>
+                    <label>Location</label>
+                    <input type="text" id="newJobLocation" placeholder="e.g. Abu Dhabi, UAE">
+                    <label>Description</label>
+                    <textarea id="newJobDesc" placeholder="Job description..."></textarea>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-primary">Add Position</button>
+                        <button type="button" class="btn-secondary" id="addJobCancel">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="galaxy.js"></script>
+    <script>
+        // Sample jobs data
+        let jobs = [
+            { id: 1, title: 'Satellite Systems Engineer', location: 'Abu Dhabi, UAE', desc: 'Lead the design and development of next-generation satellite communication systems.' },
+            { id: 2, title: 'Mission Control Specialist', location: 'Dubai, UAE', desc: 'Oversee live missions and ensure successful operations of space assets.' },
+            { id: 3, title: 'Space Software Developer', location: 'Remote', desc: 'Build mission-critical software for spacecraft control systems and ground stations.' }
+        ];
+
+        // Talent Orbit — all rejected candidates, grouped by orbit (3=highest value, 1=early potential)
+        // Orbit 3: Passed 3 interviews, final round / role closed. Orbit 2: Passed HR + 1-2 interviews. Orbit 1: CV passed, failed early round.
+        let talentOrbit = [
+            { id: 1, orbit: 3, name: 'Aisha Al-Nuaimi', email: 'a.nuaimi@email.com', role: 'Satellite Systems Engineer', score: 94, skillsMatch: 91, yoe: '5+', education: 'high', reason: 'Strong hire, wrong timing — role closed before offer. Passed all 3 interview stages.', requiredSkills: ['RF Engineering', 'Systems Integration', 'Payload'], candidateSkills: ['RF Engineering', 'Systems Integration', 'Payload'], skillMatchPct: 92, trainingPotential: 'Very high value. Fast-track re-entry. HR alert on skill update.', orbitHighlight: 'Fast-track re-entry · HR alert on skill update' },
+            { id: 2, orbit: 3, name: 'Thomas Weber', email: 't.weber@email.com', role: 'Satellite Systems Engineer', score: 90, skillsMatch: 88, yoe: '5+', education: 'high', reason: 'Final round rejection — chosen candidate had slightly better satellite operations experience. Excellent technical fit.', requiredSkills: ['RF Engineering', 'Ground systems'], candidateSkills: ['RF Engineering', 'Ground systems'], skillMatchPct: 88, trainingPotential: 'Very high value. Fast-track for next Satellite role.', orbitHighlight: 'Fast-track re-entry · HR alert on skill update' },
+            { id: 3, orbit: 3, name: 'Fatima Khan', email: 'f.khan@email.com', role: 'Space Software Developer', score: 93, skillsMatch: 90, yoe: '3-5', education: 'high', reason: 'Role closed after final round. Passed 3 stages. Strong C++ and real-time experience.', requiredSkills: ['C++', 'Python', 'Real-time'], candidateSkills: ['C++', 'Python', 'Real-time'], skillMatchPct: 90, trainingPotential: 'Very high value. Fast-track for Software roles.', orbitHighlight: 'Fast-track re-entry · HR alert on skill update' },
+            { id: 4, orbit: 2, name: 'Elena Rodriguez', email: 'e.rodriguez@email.com', role: 'Mission Control Specialist', score: 82, skillsMatch: 78, yoe: '3-5', education: 'high', reason: 'Passed HR + 2 interviews. Rejected due to limited project experience with live mission ops tools.', requiredSkills: ['Real-time systems', 'Mission protocols', 'Ops tools'], candidateSkills: ['Mission protocols', 'Operations'], skillMatchPct: 72, trainingPotential: 'Missing tool experience — 3-month onboarding could bridge gap.' },
+            { id: 5, orbit: 2, name: 'James Wilson', email: 'j.wilson@email.com', role: 'Space Software Developer', score: 79, skillsMatch: 74, yoe: '3-5', education: 'mid', reason: 'Passed HR + 1 technical. Domain exposure gap — no spacecraft software projects.', requiredSkills: ['C++', 'Flight software', 'Spacecraft'], candidateSkills: ['C++', 'Embedded'], skillMatchPct: 68, trainingPotential: 'Strong fundamentals. Consider for future with domain training.' },
+            { id: 6, orbit: 1, name: 'Yusuf Al-Rashid', email: 'y.alrashid@email.com', role: 'Satellite Systems Engineer', score: 78, skillsMatch: 75, yoe: '3-5', education: 'high', reason: 'Passed CV screening. Failed early technical — experience below requirement (5+ years preferred). Skill gaps, not fit.', requiredSkills: ['RF Engineering', 'Systems Integration'], candidateSkills: ['RF Engineering'], skillMatchPct: 67, trainingPotential: 'High training potential — 2-year gap can be bridged.' },
+            { id: 7, orbit: 1, name: 'Maria Santos', email: 'm.santos@email.com', role: 'Mission Control Specialist', score: 72, skillsMatch: 68, yoe: '0-3', education: 'mid', reason: 'Passed CV. Failed early HR/technical — skill gap in real-time systems. Good academic background.', requiredSkills: ['Real-time systems', 'Operations'], candidateSkills: ['Operations'], skillMatchPct: 45, trainingPotential: 'Consider for junior mission ops — shows aptitude.' },
+            { id: 8, orbit: 1, name: 'Omar Hassan', email: 'o.hassan@email.com', role: 'Space Software Developer', score: 68, skillsMatch: 62, yoe: '3-5', education: 'high', reason: 'Passed CV. Failed early round — role mismatch. Web dev background, not embedded/real-time.', requiredSkills: ['C++', 'Real-time', 'Embedded'], candidateSkills: ['Python', 'JavaScript'], skillMatchPct: 38, trainingPotential: '6-month C++/embedded training could bridge gap.' }
+        ];
+
+        // Sample applicants (ranked by resume flags, docs, interview notes)
+        const applicantsData = {
+            1: [
+                { name: 'Sarah Chen', email: 'sarah.chen@email.com', score: 94, flags: 'Python, RF Engineering (resume) • Strong technical doc • Interview: leadership skills noted' },
+                { name: 'Marcus Okonkwo', email: 'm.okonkwo@email.com', score: 88, flags: 'Embedded Systems, Systems Integration (resume) • Portfolio uploaded • Interview: problem-solving highlight' },
+                { name: 'Elena Vasquez', email: 'e.vasquez@email.com', score: 82, flags: 'C++, Satellite comms (resume) • Reference letters • Interview: cultural fit strong' }
+            ],
+            2: [
+                { name: 'James Wilson', email: 'j.wilson@email.com', score: 91, flags: 'Operations, Real-time systems (resume) • Certifications uploaded • Interview: mission-critical experience' },
+                { name: 'Priya Sharma', email: 'p.sharma@email.com', score: 85, flags: 'Communication protocols (resume) • Project samples • Interview: team collaboration noted' }
+            ],
+            3: [
+                { name: 'Alex Kim', email: 'a.kim@email.com', score: 96, flags: 'C++, Python, Real-time (resume) • GitHub portfolio • Interview: excellent technical depth' },
+                { name: 'Nina Petrov', email: 'n.petrov@email.com', score: 89, flags: 'Software architecture (resume) • Design docs • Interview: spacecraft experience' }
+            ]
+        };
+
+        let currentUser = null;
+        let selectedJobId = null;
+
+        // Galaxy init
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.initGalaxy) {
+                window.initGalaxy('galaxy-background', {
+                    mouseRepulsion: true,
+                    mouseInteraction: true,
+                    density: 1,
+                    glowIntensity: 0.3,
+                    saturation: 0,
+                    hueShift: 140,
+                    twinkleIntensity: 0.3,
+                    rotationSpeed: 0.1,
+                    repulsionStrength: 2,
+                    autoCenterRepulsion: 0,
+                    starSpeed: 0.5,
+                    speed: 1,
+                    transparent: false
+                });
+            }
+        });
+
+        // Check existing session
+        const savedUser = localStorage.getItem('hrUser');
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            } catch (e) {}
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!email.toLowerCase().endsWith('@space42.com')) {
+                document.getElementById('loginError').style.display = 'block';
+                return;
+            }
+            document.getElementById('loginError').style.display = 'none';
+            const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            currentUser = { email, name };
+            localStorage.setItem('hrUser', JSON.stringify(currentUser));
+            showDashboard();
+        });
+
+        function showDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('show');
+            const chatToggle = document.getElementById('hrChatToggle');
+            if (chatToggle) chatToggle.style.display = 'flex';
+            document.getElementById('orionGreeting').textContent = `Hello, ${currentUser.name}!`;
+            document.getElementById('userBadge').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${currentUser.email}`;
+            document.getElementById('userBadge').onclick = () => {
+                if (confirm('Log out?')) {
+                    localStorage.removeItem('hrUser');
+                    location.reload();
+                }
+            };
+            renderJobs();
+            initTabs();
+            renderTalentOrbit();
+            initHRChat();
+        }
+
+        function initTabs() {
+            document.querySelectorAll('.hr-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.hr-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.hr-tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        function renderTalentOrbit() {
+            const orbitFilter = document.getElementById('filterOrbit')?.value;
+            const roleFilter = document.getElementById('filterRole')?.value;
+            const skillsFilter = document.getElementById('filterSkills')?.value;
+            const yoeFilter = document.getElementById('filterYoe')?.value;
+            const eduFilter = document.getElementById('filterEducation')?.value;
+            const isTableView = document.querySelector('.view-btn[data-view="table"]')?.classList.contains('active');
+
+            let filtered = talentOrbit.filter(r => {
+                if (orbitFilter && r.orbit !== parseInt(orbitFilter)) return false;
+                if (roleFilter && r.role !== roleFilter) return false;
+                if (skillsFilter && (
+                    (skillsFilter === 'high' && r.skillsMatch < 70) ||
+                    (skillsFilter === 'mid' && (r.skillsMatch < 50 || r.skillsMatch >= 70)) ||
+                    (skillsFilter === 'low' && r.skillsMatch >= 50)
+                )) return false;
+                if (yoeFilter && r.yoe !== yoeFilter) return false;
+                if (eduFilter && r.education !== eduFilter) return false;
+                return true;
+            });
+
+            filtered.sort((a, b) => {
+                if (a.orbit !== b.orbit) return b.orbit - a.orbit;
+                return b.score - a.score;
+            });
+
+            const list = document.getElementById('talentOrbitCards');
+            if (!list) return;
+            list.className = 'talent-orbit-cards' + (isTableView ? ' table-view' : '');
+            list.innerHTML = filtered.map((r, idx) => {
+                const rank = idx + 1;
+                const scoreClass = r.score >= 75 ? 'good' : '';
+                const gaps = (r.requiredSkills || []).filter(s => !(r.candidateSkills || []).includes(s));
+                const orbitBadge = `<span class="orbit-badge orbit-${r.orbit}">Orbit ${r.orbit}</span>`;
+                const rankBadge = `<span class="rank-badge">#${rank}</span>`;
+                const orbitHighlight = r.orbit === 3 && r.orbitHighlight ? `<div class="orbit-card-highlight">${r.orbitHighlight}</div>` : '';
+
+                if (isTableView) {
+                    return `
+                    <div class="orbit-card" data-id="${r.id}">
+                        ${rankBadge}
+                        ${orbitBadge}
+                        <span class="score-badge ${scoreClass}">${r.score}%</span>
+                        <div><strong>${r.name}</strong><br><span class="applicant-email">${r.email}</span></div>
+                        <div style="font-size:0.85rem;">${r.role}</div>
+                        <div style="font-size:0.85rem;">${r.skillMatchPct}%</div>
+                        <div>
+                            <span class="rejection-toggle" onclick="toggleRejectionReason(${r.id})">Reason</span> ·
+                            <span class="rejection-toggle" onclick="toggleSkillGap(${r.id})">Gaps</span>
+                            ${r.orbit === 3 ? '<button class="recontact-btn" onclick="event.stopPropagation(); recontactCandidate(' + r.id + ')">Re-contact</button> ' : ''}
+                            <button class="reconsider-btn" onclick="openReconsiderModal(${r.id})">Reconsider</button>
+                        </div>
+                        <div class="rejection-reason collapsed" id="reason-${r.id}" style="grid-column:1/-1">${r.reason}</div>
+                        <div class="skill-gap-panel collapsed" id="gap-${r.id}" style="grid-column:1/-1">
+                            <div>Match: ${r.skillMatchPct}%</div>
+                            <div class="skill-match-bar"><div class="skill-match-fill" style="width:${r.skillMatchPct}%"></div></div>
+                            <div class="skill-gaps">Missing: ${(gaps.length ? gaps.join(', ') : 'None')}</div>
+                            <div class="training-potential">${r.trainingPotential}</div>
+                        </div>
+                    </div>
+                `;
+                }
+                return `
+                    <div class="orbit-card" data-id="${r.id}">
+                        ${rankBadge}
+                        ${orbitBadge}
+                        <span class="score-badge ${scoreClass}">${r.score}%</span>
+                        <h4>${r.name}</h4>
+                        <div class="applicant-email">${r.email}</div>
+                        <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-top:0.25rem;">${r.role} · ${r.yoe} · Edu: ${r.education}</div>
+                        ${orbitHighlight}
+                        <div class="rejection-toggle" onclick="toggleRejectionReason(${r.id})">View AI rejection reason ▼</div>
+                        <div class="rejection-reason collapsed" id="reason-${r.id}">${r.reason}</div>
+                        <div class="rejection-toggle" onclick="toggleSkillGap(${r.id})">View skill gap analysis ▼</div>
+                        <div class="skill-gap-panel collapsed" id="gap-${r.id}">
+                            <div>Match: ${r.skillMatchPct}%</div>
+                            <div class="skill-match-bar"><div class="skill-match-fill" style="width:${r.skillMatchPct}%"></div></div>
+                            <div class="skill-gaps">Missing: ${(gaps.length ? gaps.join(', ') : 'None')}</div>
+                            <div class="training-potential">${r.trainingPotential}</div>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+                            ${r.orbit === 3 ? '<button class="recontact-btn" onclick="recontactCandidate(' + r.id + ')">Re-contact</button>' : ''}
+                            <button class="reconsider-btn" onclick="openReconsiderModal(' + r.id + ')">Reconsider</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleRejectionReason(id) {
+            const el = document.getElementById('reason-' + id);
+            if (el) el.classList.toggle('collapsed');
+        }
+
+        function toggleSkillGap(id) {
+            const el = document.getElementById('gap-' + id);
+            if (el) el.classList.toggle('collapsed');
+        }
+
+        let reconsiderCandidateId = null;
+
+        function openReconsiderModal(id) {
+            const c = talentOrbit.find(r => r.id === id);
+            if (!c) return;
+            reconsiderCandidateId = id;
+            document.getElementById('reconsiderModalTitle').textContent = 'Reconsider Candidate';
+            document.getElementById('reconsiderCandidateName').textContent = `${c.name} (${c.email}) — ${c.role}${c.orbit === 3 ? ' [Orbit 3 — Fast-track]' : ''}`;
+            const recontactBtn = document.getElementById('reconsiderRecontact');
+            if (recontactBtn) recontactBtn.style.display = c.orbit === 3 ? 'block' : 'none';
+            document.getElementById('reconsiderModal').classList.add('show');
+        }
+
+        document.getElementById('reconsiderModalClose')?.addEventListener('click', () => document.getElementById('reconsiderModal').classList.remove('show'));
+        document.getElementById('reconsiderMoveInterview')?.addEventListener('click', () => { if (reconsiderCandidateId) { alert('Candidate moved to interview stage.'); document.getElementById('reconsiderModal').classList.remove('show'); } });
+        document.getElementById('reconsiderRecontact')?.addEventListener('click', () => { if (reconsiderCandidateId) { const c = talentOrbit.find(r => r.id === reconsiderCandidateId); alert('Re-contact initiated for ' + (c?.name || 'candidate') + '. Fast-track re-entry.'); document.getElementById('reconsiderModal').classList.remove('show'); } });
+        document.getElementById('reconsiderReconsider')?.addEventListener('click', () => { if (reconsiderCandidateId) { alert('Candidate reconsidered for this role.'); document.getElementById('reconsiderModal').classList.remove('show'); } });
+        document.getElementById('reconsiderTagFuture')?.addEventListener('click', () => { if (reconsiderCandidateId) { alert('Candidate tagged for future roles.'); document.getElementById('reconsiderModal').classList.remove('show'); } });
+
+        document.querySelectorAll('#filterOrbit, #filterRole, #filterSkills, #filterYoe, #filterEducation').forEach(el => {
+            el?.addEventListener('change', renderTalentOrbit);
+        });
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn?.addEventListener('click', () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderTalentOrbit();
+            });
+        });
+
+        function initHRChat() {
+            const toggle = document.getElementById('hrChatToggle');
+            const panel = document.getElementById('hrChatPanel');
+            const closeBtn = document.getElementById('hrChatClose');
+            const input = document.getElementById('hrChatInput');
+            const messages = document.getElementById('hrChatMessages');
+
+            const hrResponses = {
+                default: 'I can help with: "Summarize talent orbit for [role]", "Who almost made it?", "Orbit 3 candidates?"',
+                summarize: (role) => {
+                    const list = talentOrbit.filter(r => !role || r.role.includes(role)).slice(0,5);
+                    return `For ${role || 'that role'}: ${list.map(r => r.name + ' (Orbit ' + r.orbit + ', ' + r.score + '%)').join(', ') || 'None'}.`;
+                },
+                almost: () => `Orbit 3 (highest value): ${talentOrbit.filter(r => r.orbit === 3).map(r => r.name).join(', ') || 'None'}. Orbit 2: ${talentOrbit.filter(r => r.orbit === 2).map(r => r.name).join(', ') || 'None'}.`,
+                missed: () => `Strong candidates (Orbit 3): ${talentOrbit.filter(r => r.orbit === 3).map(r => r.name + ' — Fast-track').join(', ') || 'None'}.`
+            };
+
+            toggle?.addEventListener('click', () => panel.classList.toggle('open'));
+            closeBtn?.addEventListener('click', () => panel.classList.remove('open'));
+
+            const addBotMsg = (text) => {
+                const div = document.createElement('div');
+                div.className = 'hr-chat-msg';
+                div.innerHTML = '<div class="bubble">' + text + '</div>';
+                messages.appendChild(div);
+                messages.scrollTop = messages.scrollHeight;
+            };
+
+            if (messages && !messages.innerHTML.trim()) addBotMsg('Hi! I\'m Orion HR Assistant. Ask me about the Talent Orbit, Orbit 3 candidates, or who to fast-track.');
+
+            input?.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter') return;
+                const q = input.value.trim().toLowerCase();
+                if (!q) return;
+                const userDiv = document.createElement('div');
+                userDiv.className = 'hr-chat-msg user';
+                userDiv.innerHTML = '<div class="bubble">' + input.value + '</div>';
+                messages.appendChild(userDiv);
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+
+                let reply = hrResponses.default;
+                if (q.includes('summarize') || (q.includes('talent') && q.includes('role'))) reply = hrResponses.summarize(q.match(/for\s+([\w\s]+)/i)?.[1]?.trim() || q.match(/(?:satellite|mission|software|developer|engineer|specialist)/i)?.[0] || '');
+                else if (q.includes('almost') || q.includes('orbit 2') || q.includes('orbit 3')) reply = hrResponses.almost();
+                else if (q.includes('miss') || q.includes('strong') || q.includes('fast-track') || q.includes('reconsider')) reply = hrResponses.missed();
+                setTimeout(() => addBotMsg(reply), 600);
+            });
+        }
+
+        function recontactCandidate(id) {
+            const c = talentOrbit.find(r => r.id === id);
+            if (c) alert('Re-contact initiated for ' + c.name + '. Fast-track re-entry.');
+        }
+
+        window.toggleRejectionReason = toggleRejectionReason;
+        window.toggleSkillGap = toggleSkillGap;
+        window.openReconsiderModal = openReconsiderModal;
+        window.recontactCandidate = recontactCandidate;
+
+        function renderJobs() {
+            const panels = document.getElementById('jobsPanels');
+            panels.innerHTML = jobs.map(job => `
+                <a href="#" class="job-panel" data-job-id="${job.id}" onclick="selectJob(${job.id}); return false;">
+                    <h3>${job.title}</h3>
+                    <div class="job-meta">${job.location}</div>
+                </a>
+            `).join('') + '<div class="add-job-btn" id="addJobBtn" title="Add new job">+</div>';
+            document.getElementById('addJobBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('addJobModal').classList.add('show');
+            });
+        }
+
+        function selectJob(id) {
+            selectedJobId = id;
+            const job = jobs.find(j => j.id === id);
+            if (!job) return;
+            document.getElementById('jobDetailSection').classList.add('show');
+            document.getElementById('jobDetailTitle').textContent = job.title;
+            document.getElementById('jobDetailDesc').textContent = job.desc;
+            document.getElementById('jobDetailSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('applicantsBtn').addEventListener('click', () => {
+            if (!selectedJobId) return;
+            const job = jobs.find(j => j.id === selectedJobId);
+            const applicants = applicantsData[selectedJobId] || [];
+            document.getElementById('applicantsModalTitle').textContent = `Applicants — ${job ? job.title : 'Position'}`;
+            document.getElementById('applicantsList').innerHTML = applicants.map((a, i) => `
+                <div class="applicant-card">
+                    <span class="applicant-rank">#${i + 1}</span>
+                    <h4>${a.name}</h4>
+                    <div class="applicant-email">${a.email}</div>
+                    <div class="applicant-score">Score: ${a.score}</div>
+                    <div class="applicant-flags"><strong>Ranked by:</strong> ${a.flags}</div>
+                </div>
+            `).join('') || '<p style="color: rgba(255,255,255,0.6);">No applicants yet.</p>';
+            document.getElementById('applicantsModal').classList.add('show');
+        });
+
+        document.getElementById('applicantsModalClose').addEventListener('click', () => {
+            document.getElementById('applicantsModal').classList.remove('show');
+        });
+
+
+        document.getElementById('addJobModalClose').addEventListener('click', () => {
+            document.getElementById('addJobModal').classList.remove('show');
+        });
+
+        document.getElementById('addJobCancel').addEventListener('click', () => {
+            document.getElementById('addJobModal').classList.remove('show');
+        });
+
+        document.getElementById('addJobForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newJob = {
+                id: jobs.length ? Math.max(...jobs.map(j => j.id)) + 1 : 1,
+                title: document.getElementById('newJobTitle').value.trim(),
+                location: document.getElementById('newJobLocation').value.trim(),
+                desc: document.getElementById('newJobDesc').value.trim()
+            };
+            jobs.push(newJob);
+            applicantsData[newJob.id] = [];
+            document.getElementById('addJobForm').reset();
+            document.getElementById('addJobModal').classList.remove('show');
+            renderJobs();
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('show');
+            });
+        });
+
+        window.selectJob = selectJob;
+    </script>
+</body>
+</html>
