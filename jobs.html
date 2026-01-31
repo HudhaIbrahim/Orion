@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs - SPACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent);
+            background-size: 200% 200%;
+            pointer-events: none;
+            z-index: 0;
+            animation: starsMove 120s linear infinite;
+        }
+
+        @keyframes starsMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px dashed rgba(59, 130, 246, 0.4);
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating rocket animation */
+        .upload-section::before {
+            content: '🚀';
+            position: absolute;
+            font-size: 3rem;
+            top: 20%;
+            right: 10%;
+            animation: rocketFloat 4s ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes rocketFloat {
+            0%, 100% { transform: translateY(0px) rotate(-20deg); }
+            50% { transform: translateY(-30px) rotate(-15deg); }
+        }
+
+        .upload-section.has-file {
+            border-color: rgba(34, 197, 94, 0.6);
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1), transparent 40%),
+                rgba(15, 42, 23, 0.6);
+            animation: successPulse 2s ease-in-out;
+        }
+
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .upload-section:not(.has-file):hover {
+            border-color: rgba(59, 130, 246, 0.8);
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15), transparent 60%),
+                rgba(15, 23, 42, 0.8);
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: iconBob 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBob {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-desc {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        /* Jobs Grid */
+        .jobs-section {
+            opacity: 0.3;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .jobs-section.unlocked {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .job-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Cosmic glow effect */
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .job-card:hover::before {
+            opacity: 1;
+            animation: cosmicRotate 8s linear infinite;
+        }
+
+        @keyframes cosmicRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .job-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 
+                0 20px 40px rgba(59, 130, 246, 0.3),
+                0 0 60px rgba(139, 92, 246, 0.2);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .job-icon {
+            font-size: 3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .job-card:hover .job-icon {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.8));
+        }
+
+        .job-badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            color: #60a5fa;
+        }
+
+        .job-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-company {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        .job-details {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .job-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .job-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Back to Orion</a>
+
+        <div class="page-header">
+            <h1 class="page-title">🚀 Explore Career Opportunities</h1>
+            <p style="color: rgba(255, 255, 255, 0.7);">✨ Upload your CV/Resume to unlock personalized job matches</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section" id="upload-section">
+            <div class="upload-icon">📄</div>
+            <h2 class="upload-title">Upload Your CV/Resume</h2>
+            <p class="upload-desc">🌟 We'll match you with the best opportunities based on your experience</p>
+            
+            <div class="file-input-wrapper">
+                <input type="file" id="cv-upload" accept=".pdf,.doc,.docx" onchange="handleFileUpload(event)">
+                <button class="upload-btn" onclick="document.getElementById('cv-upload').click()">
+                    Choose File
+                </button>
+            </div>
+
+            <div class="file-info" id="file-info">
+                <span style="color: #22c55e;">✓</span>
+                <span id="file-name"></span>
+                <button onclick="removeFile()" style="background: none; border: none; color: #ef4444; cursor: pointer; margin-left: 1rem;">Remove</button>
+            </div>
+        </div>
+
+        <!-- Jobs Section -->
+        <div class="jobs-section" id="jobs-section">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Available Positions</h2>
+            
+            <div class="jobs-grid">
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-icon">🛰️</div>
+                        <div class="job-badge">Remote</div>
+                    </div>
+                    <h3 class="job-title">Satellite Systems Engineer</h3>
+                    <p class="job-company">SPACE Technologies</p>
+                    <div class="job-details">
+                        <div class="job-detail">📍 Global</div>
+                        <div class="job-detail">💼 Full-time</div>
+                        <div class="job-detail">⭐ Senior</div>
+                    </div>
+                    <p class="job-description">
+                        Lead the design and development of next-generation satellite communication systems. Work with cutting-edge technology to push the boundaries of space exploration.
+                    </p>
+                    <button class="apply-btn" onclick="applyToJob('Satellite Systems Engineer')">Apply Now</button>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-icon">🚀</div>
+                        <div class="job-badge">Hybrid</div>
+                    </div>
+                    <h3 class="job-title">Mission Control Specialist</h3>
+                    <p class="job-company">SPACE Technologies</p>
+                    <div class="job-details">
+                        <div class="job-detail">📍 Houston, TX</div>
+                        <div class="job-detail">💼 Full-time</div>
+                        <div class="job-detail">⭐ Mid-level</div>
+                    </div>
+                    <p class="job-description">
+                        Oversee live missions and ensure successful operations of space assets. Coordinate with international teams to achieve mission objectives.
+                    </p>
+                    <button class="apply-btn" onclick="applyToJob('Mission Control Specialist')">Apply Now</button>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-icon">🔬</div>
+                        <div class="job-badge">On-site</div>
+                    </div>
+                    <h3 class="job-title">Aerospace Data Scientist</h3>
+                    <p class="job-company">SPACE Technologies</p>
+                    <div class="job-details">
+                        <div class="job-detail">📍 Cape Canaveral, FL</div>
+                        <div class="job-detail">💼 Full-time</div>
+                        <div class="job-detail">⭐ Senior</div>
+                    </div>
+                    <p class="job-description">
+                        Analyze telemetry data and develop predictive models to optimize spacecraft performance and mission planning using AI and machine learning.
+                    </p>
+                    <button class="apply-btn" onclick="applyToJob('Aerospace Data Scientist')">Apply Now</button>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-icon">🌍</div>
+                        <div class="job-badge">Remote</div>
+                    </div>
+                    <h3 class="job-title">Earth Observation Analyst</h3>
+                    <p class="job-company">SPACE Technologies</p>
+                    <div class="job-details">
+                        <div class="job-detail">📍 Remote</div>
+                        <div class="job-detail">💼 Full-time</div>
+                        <div class="job-detail">⭐ Junior</div>
+                    </div>
+                    <p class="job-description">
+                        Process and interpret satellite imagery to provide insights on climate change, urban development, and environmental monitoring.
+                    </p>
+                    <button class="apply-btn" onclick="applyToJob('Earth Observation Analyst')">Apply Now</button>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-icon">⚙️</div>
+                        <div class="job-badge">Hybrid</div>
+                    </div>
+                    <h3 class="job-title">Propulsion Systems Engineer</h3>
+                    <p class="job-company">SPACE Technologies</p>
+                    <div class="job-details">
+                        <div class="job-detail">📍 Los Angeles, CA</div>
+                        <div class="job-detail">💼 Full-time</div>
+                        <div class="job-detail">⭐ Senior</div>
+                    </div>
+                    <p class="job-description">
+                        Design and test advanced rocket propulsion systems. Work on revolutionary technologies for deep space exploration and interplanetary travel.
+                    </p>
+                    <button class="apply-btn" onclick="applyToJob('Propulsion Systems Engineer')">Apply Now</button>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-icon">💻</div>
+                        <div class="job-badge">Remote</div>
+                    </div>
+                    <h3 class="job-title">Space Software Developer</h3>
+                    <p class="job-company">SPACE Technologies</p>
+                    <div class="job-details">
+                        <div class="job-detail">📍 Global</div>
+                        <div class="job-detail">💼 Full-time</div>
+                        <div class="job-detail">⭐ Mid-level</div>
+                    </div>
+                    <p class="job-description">
+                        Build mission-critical software for spacecraft control systems, ground stations, and data processing pipelines using modern tech stacks.
+                    </p>
+                    <button class="apply-btn" onclick="applyToJob('Space Software Developer')">Apply Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let uploadedFile = null;
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedFile = file;
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('file-info').classList.add('show');
+                document.getElementById('upload-section').classList.add('has-file');
+                document.getElementById('jobs-section').classList.add('unlocked');
+            }
+        }
+
+        function removeFile() {
+            uploadedFile = null;
+            document.getElementById('cv-upload').value = '';
+            document.getElementById('file-info').classList.remove('show');
+            document.getElementById('upload-section').classList.remove('has-file');
+            document.getElementById('jobs-section').classList.remove('unlocked');
+        }
+
+        function applyToJob(jobTitle) {
+            if (!uploadedFile) {
+                alert('Please upload your CV/Resume first!');
+                return;
+            }
+            alert(`Application submitted for ${jobTitle}! We'll review your CV and get back to you soon.`);
+        }
+    </script>
+</body>
+</html>
